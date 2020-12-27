@@ -1,6 +1,6 @@
-#include <bits/stdint-uintn.h>
 #include <cstdint>
 #include <array>
+#include <string>
 
 constexpr uint16_t memory_size = 4096;
 
@@ -37,6 +37,10 @@ class Chip8 {
     } _timer;
 
     uint8_t _opcode; // saves the current opcode  
+    
+    /* methods */
+    void init_fonts();
+    void load_game(const std::string& path);
 
 };
 
