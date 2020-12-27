@@ -4,17 +4,19 @@
 
 constexpr uint16_t memory_size = 4096;
 
-const uint8_t general_reg_size = 16, 
+constexpr uint8_t general_reg_size = 16, 
               display_height = 64,
               display_width = 32,
               stack_size = 16,
               keypad_size = 16; // hex based keypad 0x0-0xF
 
-class chip8 {
+class Chip8 {
   public:
-
+    
+    Chip8();
 
   private:
+    /* attributes*/
     std::array<uint8_t, memory_size> _memory; // chip8's memory space  
 
     std::array<uint16_t, stack_size> _stack;
@@ -35,6 +37,7 @@ class chip8 {
     } _timer;
 
     uint8_t _opcode; // saves the current opcode  
-}
+
+};
 
 
