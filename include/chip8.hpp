@@ -1,5 +1,7 @@
+#include <bits/stdint-uintn.h>
 #include <cstdint>
 #include <array>
+#include <unordered_map>
 #include <string>
 
 constexpr uint16_t memory_size = 4096;
@@ -13,7 +15,9 @@ constexpr uint8_t general_reg_size = 16,
 class Chip8 {
   public:
     
-    Chip8();
+    Chip8(const std::string& path);
+    
+    void handle_opcode();
 
   private:
     /* attributes*/
@@ -37,11 +41,12 @@ class Chip8 {
     } _timer;
 
     uint8_t _opcode; // saves the current opcode  
-    
+    std::unordered_map<uint8_t, void (*)()> _opcode_func; 
+
     /* methods */
     void init_fonts();
     void load_game(const std::string& path);
-
+    void update_timers();
 };
 
 

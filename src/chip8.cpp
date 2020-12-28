@@ -2,14 +2,15 @@
 #include <array>
 #include <bits/stdint-uintn.h>
 #include <cstring>
-#include "..//include//chip8.hpp"
 #include <exception>
 #include <stdexcept>
+#include <iostream>
+#include "..//include//chip8.hpp"
 
 constexpr uint16_t program_start_addr = 0x200;
 constexpr uint8_t fonts_size = 80;
 
-Chip8::Chip8() {
+Chip8::Chip8(const std::string& path) {
 
   _memory.fill(0);
   _stack.fill(0);
@@ -23,6 +24,19 @@ Chip8::Chip8() {
   _reg.pc = program_start_addr;
   
   init_fonts();
+  load_game(path);
+}
+
+
+void Chip8::handle_opcode() {
+  _opcode = _memory[_reg.pc] << 8 | _memory[_reg.pc + 1];
+
+  if(_opcode_func.find(_opcode) != _opcode_func.cend())
+    _opcode_func[_opcode]();
+  else
+   std::cerr << "no such opcode exist" << std::endl;
+
+  update_timers();  
 }
 
 
@@ -48,6 +62,7 @@ void Chip8::init_fonts() {
   std::copy(fonts.begin(), fonts.end(), _memory.begin());
 }
 
+
 void Chip8::load_game(const std::string& path) { 
   std::ifstream game_file(path);
   if(!game_file)
@@ -57,5 +72,20 @@ void Chip8::load_game(const std::string& path) {
   uint16_t i = program_start_addr;
   while(game_file >> val) 
     _memory[i++] = val;
-
 }
+
+
+void Chip8::update_timers() {
+  if(_timer.delay > 0)
+    _timer.delay--;
+
+  if(_timer.sound > 0) {
+    if(_timer.sound == 1)
+      std::cout << "BOOP!" << std::endl;
+    _timer.sound--;
+  }
+}
+
+
+
+

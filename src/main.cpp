@@ -3,5 +3,7 @@
 
 
 int main() {
-  std::cout << "hey" << std::endl;
+  Chip8 vm("../ROMS/PONG");
+  
+  return 0;
 }
