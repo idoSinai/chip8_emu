@@ -16,6 +16,7 @@ class Chip8 {
   public:
     
     Chip8(const std::string& path);
+    ~Chip8() = default;
     
     void handle_opcode();
 
