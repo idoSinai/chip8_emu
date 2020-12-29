@@ -10,8 +10,8 @@
 constexpr uint16_t memory_size = 4096;
 
 constexpr uint8_t general_reg_size = 16, 
-              display_height = 64,
-              display_width = 32,
+              display_height = 32,
+              display_width = 64,
               stack_size = 16,
               keypad_size = 16; // hex based keypad 0x0-0xF
 
@@ -23,9 +23,8 @@ class Chip8 {
     Chip8(const std::string& path);
     Chip8() = delete;
     ~Chip8() = default;
-
-    void run();
     
+    void run();
 
   private:
     /* attributes*/
