@@ -1,3 +1,5 @@
+#include <SFML/Window/Event.hpp>
+#include <bits/stdint-uintn.h>
 #include <fstream>
 #include <array>
 #include <cstring>
@@ -30,6 +32,31 @@ Chip8::Chip8(const std::string& path) :
 }
 
 
+void Chip8::run() {
+  sf::Event event;
+  while(_graphics.window.isOpen()) {
+    while(_graphics.window.pollEvent(event)) {
+      switch (event.type) {
+        /* updating the keypad */
+        case sf::Event::Closed:
+          _graphics.window.close();
+          break;
+        case sf::Event::KeyPressed:
+          update_key(event, static_cast<uint8_t>(Key_State::PRESSED));
+          break;
+        case sf::Event::KeyReleased:
+          update_key(event, static_cast<uint8_t>(Key_State::RELEASED));
+          break;
+        default:
+          break;
+      }  
+    }
+    handle_opcode();
+    update_timers();
+  }
+}
+
+
 void Chip8::handle_opcode() {
   _opcode = _memory[_reg.pc] << 8 | _memory[_reg.pc + 1];
 
@@ -37,8 +64,6 @@ void Chip8::handle_opcode() {
     _opcode_func[_opcode]();
   else
    std::cerr << "no such opcode exist" << std::endl;
-
-  update_timers();  
 }
 
 
@@ -88,6 +113,63 @@ void Chip8::update_timers() {
   }
 }
 
+void Chip8::update_key(const sf::Event& event, const uint8_t state) {
+  switch(event.key.code) {
+    case sf::Keyboard::Num1:
+      _keypad[0] = state;
+      break;
+    case sf::Keyboard::Num2:   
+      _keypad[1] = state; 
+      break;
+    case sf::Keyboard::Num3:   
+      _keypad[2] = state; 
+      break;
+    case sf::Keyboard::Num4:   
+      _keypad[3] = state; 
+      break;
+    case sf::Keyboard::Q:      
+      _keypad[4] = state; 
+      break;
+    case sf::Keyboard::W:      
+      _keypad[5] = state; 
+      break;
+    case sf::Keyboard::E:      
+      _keypad[6] = state; 
+      break;
+    case sf::Keyboard::R:      
+      _keypad[7] = state; 
+      break;
+    case sf::Keyboard::A:      
+      _keypad[8] = state; 
+      break;
+    case sf::Keyboard::S:      
+      _keypad[9] = state; 
+      break;
+    case sf::Keyboard::D:      
+      _keypad[10] = state; 
+      break;
+    case sf::Keyboard::F:      
+      _keypad[11] = state; 
+      break;
+    case sf::Keyboard::Z:
+      _keypad[12] = state; 
+      break;
+    case sf::Keyboard::X:      
+      _keypad[13] = state; 
+      break;
+    case sf::Keyboard::C:      
+      _keypad[14] = state; 
+      break;
+    case sf::Keyboard::V:
+      _keypad[15] = state; 
+      break;
+    case sf::Keyboard::Escape:
+      _graphics.window.close(); 
+      break;
+    default: 
+      break;
+  }
+}
 
 
 

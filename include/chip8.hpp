@@ -1,4 +1,6 @@
 #pragma once
+#include <SFML/Window/Event.hpp>
+#include <bits/stdint-uintn.h>
 #include <cstdint>
 #include <array>
 #include <unordered_map>
@@ -13,14 +15,17 @@ constexpr uint8_t general_reg_size = 16,
               stack_size = 16,
               keypad_size = 16; // hex based keypad 0x0-0xF
 
+enum class Key_State : uint8_t {RELEASED = 0, PRESSED = 1};
+
 class Chip8 {
   public:
     
     Chip8(const std::string& path);
     Chip8() = delete;
     ~Chip8() = default;
+
+    void run();
     
-    void handle_opcode();
 
   private:
     /* attributes*/
@@ -48,9 +53,11 @@ class Chip8 {
     std::unordered_map<uint8_t, void (*)()> _opcode_func; 
 
     /* methods */
+    void handle_opcode();
     void init_fonts();
     void load_game(const std::string& path);
     void update_timers();
+    void update_key(const sf::Event& event, const uint8_t state);
 };
 
 
