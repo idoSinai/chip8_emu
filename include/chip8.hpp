@@ -48,15 +48,56 @@ class Chip8 {
       uint8_t sound;      
     } _timer;
 
-    uint8_t _opcode; // saves the current opcode  
-    std::unordered_map<uint8_t, void (*)()> _opcode_func; 
+    uint16_t _opcode; // saves the current opcode
+    typedef void (Chip8::*inst_func)();
+    std::unordered_map<uint16_t, inst_func> _opcode_table; 
 
     /* methods */
     void handle_opcode();
     void init_fonts();
+    void init_opcode_table();
     void load_game(const std::string& path);
     void update_timers();
     void update_key(const sf::Event& event, const uint8_t state);
+
+
+    /* instructions' methods for executing opcodes */
+    /* For more information: wikipedia.org/wiki/CHIP-8#Opcode_table */
+    void inst_0NNN() {};
+    void inst_00E0() {};
+    void inst_00EE() {};
+    void inst_1NNN() {};
+    void inst_2NNN() {};
+    void inst_3XNN() {};
+    void inst_4XNN() {};
+    void inst_5XY0() {};
+    void inst_6XNN() {};
+    void inst_7XNN() {};
+    void inst_8XY0() {};
+    void inst_8XY1() {};
+    void inst_8XY2() {};
+    void inst_8XY3() {};
+    void inst_8XY4() {};
+    void inst_8XY5() {};
+    void inst_8XY6() {};
+    void inst_8XY7() {};
+    void inst_8XYE() {};
+    void inst_9XY0() {};
+    void inst_ANNN() {};
+    void inst_BNNN() {};
+    void inst_CXNN() {};
+    void inst_DXYN() {};
+    void inst_EX9E() {};
+    void inst_EXA1() {};
+    void inst_FX07() {};
+    void inst_FX0A() {};
+    void inst_FX15() {};
+    void inst_FX18() {};
+    void inst_FX1E() {};
+    void inst_FX29() {};
+    void inst_FX33() {};
+    void inst_FX55() {};
+    void inst_FX65() {};
 };
 
 

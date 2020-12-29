@@ -1,5 +1,3 @@
-#include <SFML/Window/Event.hpp>
-#include <bits/stdint-uintn.h>
 #include <fstream>
 #include <array>
 #include <cstring>
@@ -12,6 +10,7 @@
 constexpr uint16_t program_start_addr = 0x200;
 constexpr uint8_t fonts_size = 80,
                   scale_factor = 10;
+
 
 Chip8::Chip8(const std::string& path) : 
             _graphics(display_width, display_height, scale_factor, path) 
@@ -29,6 +28,7 @@ Chip8::Chip8(const std::string& path) :
   
   init_fonts();
   load_game(path);
+  init_opcode_table();
 }
 
 
@@ -58,35 +58,20 @@ void Chip8::run() {
 
 
 void Chip8::handle_opcode() {
+  bool exec_opcode = false;
   _opcode = _memory[_reg.pc] << 8 | _memory[_reg.pc + 1];
 
-  if(_opcode_func.find(_opcode) != _opcode_func.cend())
-    _opcode_func[_opcode]();
-  else
-   std::cerr << "no such opcode exist" << std::endl;
-}
-
-
-void Chip8::init_fonts() {
-  std::array<uint8_t, fonts_size> fonts { {
-      0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
-      0x20, 0x60, 0x20, 0x20, 0x70, // 1
-      0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
-      0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
-      0x90, 0x90, 0xF0, 0x10, 0x10, // 4
-      0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
-      0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
-      0xF0, 0x10, 0x20, 0x40, 0x40, // 7
-      0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
-      0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
-      0xF0, 0x90, 0xF0, 0x90, 0x90, // A
-      0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
-      0xF0, 0x80, 0x80, 0x80, 0xF0, // C
-      0xE0, 0x90, 0x90, 0x90, 0xE0, // D
-      0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-      0xF0, 0x80, 0xF0, 0x80, 0x80  // F 
-    } };
-  std::copy(fonts.begin(), fonts.end(), _memory.begin());
+  for(auto inst = _opcode_table.begin(); inst != _opcode_table.cend() && !exec_opcode; inst++) {
+    if(((inst->first & _opcode) == _opcode) && ((inst->first | _opcode) == inst->first)) {
+      (*this.*(inst->second))();
+      exec_opcode = true;
+    }
+  }
+ 
+  if(exec_opcode) 
+    std::cout << "executed: " << std::hex << _opcode << std::endl;
+  else 
+    std::cerr << "didn't executed: " << std::hex << _opcode << std::endl;
 }
 
 
@@ -115,6 +100,69 @@ void Chip8::update_timers() {
     _timer.sound--;
   }
 }
+
+
+void Chip8::init_opcode_table() {
+  _opcode_table[0x0FFF] = &Chip8::inst_0NNN;
+  _opcode_table[0x00E0] = &Chip8::inst_00E0;
+  _opcode_table[0x00EE] = &Chip8::inst_00EE;
+  _opcode_table[0x1FFF] = &Chip8::inst_1NNN;
+  _opcode_table[0x2FFF] = &Chip8::inst_2NNN;
+  _opcode_table[0x3FFF] = &Chip8::inst_3XNN;
+  _opcode_table[0x4FFF] = &Chip8::inst_4XNN;
+  _opcode_table[0x5FF0] = &Chip8::inst_5XY0;
+  _opcode_table[0x6FFF] = &Chip8::inst_6XNN;
+  _opcode_table[0x7FFF] = &Chip8::inst_7XNN;
+  _opcode_table[0x8FF0] = &Chip8::inst_8XY0;
+  _opcode_table[0x8FF1] = &Chip8::inst_8XY1;
+  _opcode_table[0x8FF2] = &Chip8::inst_8XY2;
+  _opcode_table[0x8FF3] = &Chip8::inst_8XY3;
+  _opcode_table[0x8FF4] = &Chip8::inst_8XY4;
+  _opcode_table[0x8FF5] = &Chip8::inst_8XY5;
+  _opcode_table[0x8FF6] = &Chip8::inst_8XY6;
+  _opcode_table[0x8FF7] = &Chip8::inst_8XY7;
+  _opcode_table[0x8FFE] = &Chip8::inst_8XYE;
+  _opcode_table[0x9FF0] = &Chip8::inst_9XY0; 
+  _opcode_table[0xAFFF] = &Chip8::inst_ANNN;
+  _opcode_table[0xBFFF] = &Chip8::inst_BNNN;
+  _opcode_table[0xCFFF] = &Chip8::inst_CXNN;
+  _opcode_table[0xDFFF] = &Chip8::inst_DXYN;
+  _opcode_table[0xEF9E] = &Chip8::inst_EX9E;
+  _opcode_table[0xEFA1] = &Chip8::inst_EXA1;
+  _opcode_table[0xFF07] = &Chip8::inst_FX07;
+  _opcode_table[0xFF0A] = &Chip8::inst_FX0A;
+  _opcode_table[0xFF15] = &Chip8::inst_FX15;
+  _opcode_table[0xFF18] = &Chip8::inst_FX18;
+  _opcode_table[0xFF1E] = &Chip8::inst_FX1E;
+  _opcode_table[0xFF29] = &Chip8::inst_FX29;
+  _opcode_table[0xFF33] = &Chip8::inst_FX33;
+  _opcode_table[0xFF55] = &Chip8::inst_FX55;
+  _opcode_table[0xFF65] = &Chip8::inst_FX65;
+}
+
+
+void Chip8::init_fonts() {
+  std::array<uint8_t, fonts_size> fonts { {
+      0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+      0x20, 0x60, 0x20, 0x20, 0x70, // 1
+      0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+      0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+      0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+      0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+      0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+      0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+      0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+      0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+      0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+      0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+      0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+      0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+      0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+      0xF0, 0x80, 0xF0, 0x80, 0x80  // F 
+    } };
+  std::copy(fonts.begin(), fonts.end(), _memory.begin());
+}
+
 
 void Chip8::update_key(const sf::Event& event, const uint8_t state) {
   switch(event.key.code) {
@@ -175,4 +223,5 @@ void Chip8::update_key(const sf::Event& event, const uint8_t state) {
 }
 
 
+// ==================================== OPCODE DECODING METHODS ======================================
 
