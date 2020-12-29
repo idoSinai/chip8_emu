@@ -97,8 +97,11 @@ void Chip8::load_game(const std::string& path) {
 
   uint8_t val;
   uint16_t i = program_start_addr;
-  while(game_file >> val) 
+  while(game_file >> val) {
+    if(i >= _memory.size())
+      throw std::overflow_error("ROM file is too big");
     _memory[i++] = val;
+  }
 }
 
 
