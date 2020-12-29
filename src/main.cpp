@@ -1,6 +1,7 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
+#include <memory>
 #include "../include/chip8.hpp"
 
 int main(int argc, char** argv) {
@@ -12,7 +13,9 @@ int main(int argc, char** argv) {
     std::cerr << "[PATH]: " << argv[1] << " does not exist" << std::endl;
     return 1;
   }
-  Chip8 vm(std::string(argv[1]));
+
+  Chip8 vm{argv[1]};
+  vm.run();
 
   return 0;
 }
