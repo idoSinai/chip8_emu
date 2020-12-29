@@ -12,6 +12,9 @@ set(SOURCE_FILES
     ../src/chip8.cpp
     ../src/main.cpp)
 
-add_executable(emulator ${SOURCE_FILES})
-target_link_libraries(emulator ${SFML_LIBS})
-
+if(SFML_LIBS)
+  add_executable(emulator ${SOURCE_FILES})
+  target_link_libraries(emulator ${SFML_LIBS})
+else()
+  message("[ERROR]: Install SFML Package.\n")
+endif()
