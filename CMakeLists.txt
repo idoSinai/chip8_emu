@@ -5,7 +5,7 @@ project(chip8)
 set(CMAKE_CXX_STANDARD 17)
 set(SFML_LIBS sfml-system sfml-graphics sfml-window)
 
-include_directories(../include)
+include_directories(${chip8_SOURCE_DIR}/include)
 
 set(SOURCE_FILES
     ../src/graphics.cpp

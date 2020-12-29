@@ -1,7 +1,6 @@
 #pragma once 
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <cstdint>
 #include <string>
 #include <array>

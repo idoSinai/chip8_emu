@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <string>
 #include <memory>
-#include "../include/chip8.hpp"
+#include "chip8.hpp"
 
 int main(int argc, char** argv) {
   if(argc != 2) {

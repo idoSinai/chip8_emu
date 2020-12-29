@@ -4,7 +4,7 @@
 #include <exception>
 #include <stdexcept>
 #include <iostream>
-#include "..//include//chip8.hpp"
+#include "chip8.hpp"
 
 
 constexpr uint16_t program_start_addr = 0x200;

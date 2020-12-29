@@ -1,6 +1,4 @@
 #pragma once
-#include <SFML/Window/Event.hpp>
-#include <bits/stdint-uintn.h>
 #include <cstdint>
 #include <array>
 #include <unordered_map>

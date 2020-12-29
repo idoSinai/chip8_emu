@@ -1,4 +1,4 @@
-#include "../include/graphics.hpp"
+#include "graphics.hpp"
 
 
 Graphics::Graphics(const uint8_t width, const uint8_t height, const uint8_t scale_factor, const std::string& prog_name) :
