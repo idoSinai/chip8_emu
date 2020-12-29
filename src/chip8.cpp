@@ -93,7 +93,7 @@ void Chip8::init_fonts() {
 void Chip8::load_game(const std::string& path) { 
   std::ifstream game_file(path);
   if(!game_file)
-    throw std::invalid_argument("bad file path");
+    throw std::invalid_argument("can not open ROM");
 
   uint8_t val;
   uint16_t i = program_start_addr;
