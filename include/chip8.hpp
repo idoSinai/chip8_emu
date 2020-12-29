@@ -1,8 +1,9 @@
-#include <bits/stdint-uintn.h>
+#pragma once
 #include <cstdint>
 #include <array>
 #include <unordered_map>
 #include <string>
+#include "graphics.hpp"
 
 constexpr uint16_t memory_size = 4096;
 
@@ -16,12 +17,14 @@ class Chip8 {
   public:
     
     Chip8(const std::string& path);
+    Chip8() = delete;
     ~Chip8() = default;
     
     void handle_opcode();
 
   private:
     /* attributes*/
+    Graphics _graphics;
     std::array<uint8_t, memory_size> _memory; // chip8's memory space  
 
     std::array<uint16_t, stack_size> _stack;

@@ -1,17 +1,19 @@
 #include <fstream>
 #include <array>
-#include <bits/stdint-uintn.h>
 #include <cstring>
 #include <exception>
 #include <stdexcept>
 #include <iostream>
 #include "..//include//chip8.hpp"
 
+
 constexpr uint16_t program_start_addr = 0x200;
-constexpr uint8_t fonts_size = 80;
+constexpr uint8_t fonts_size = 80,
+                  scale_factor = 10;
 
-Chip8::Chip8(const std::string& path) {
-
+Chip8::Chip8(const std::string& path) : 
+            _graphics(display_width, display_height, scale_factor, path) 
+{
   _memory.fill(0);
   _stack.fill(0);
   _keypad.fill(0);
