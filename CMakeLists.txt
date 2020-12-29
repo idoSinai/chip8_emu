@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.15)
 project(chip8)
 
 set(CMAKE_CXX_STANDARD 17)
-set(SFML_LIBS sfml-system sfml-graphics sfml-window sfml-audio)
+set(SFML_LIBS sfml-system sfml-graphics sfml-window)
 
 include_directories(../include)
 
