@@ -384,7 +384,7 @@ inline void Chip8::inst_8XY3() {
  * adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't
  */
 inline void Chip8::inst_8XY4() {
-  _reg.V[0xF] = (_reg.V[_opcode_args.x] + _reg.V[_opcode_args.y]) > 0xFFFF ? 1 : 0;   
+  _reg.V[0xF] = (_reg.V[_opcode_args.x] + _reg.V[_opcode_args.y]) > 0x00FF ? 1 : 0;   
   _reg.V[_opcode_args.x] += _reg.V[_opcode_args.y];
   _reg.pc += 2;
 }
@@ -393,7 +393,7 @@ inline void Chip8::inst_8XY4() {
  * VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't
  */ 
 inline void Chip8::inst_8XY5() {
-  _reg.V[0xF] = _reg.V[_opcode_args.x] < _reg.V[_opcode_args.y] ? 1 : 0;
+  _reg.V[0xF] = _reg.V[_opcode_args.x] < _reg.V[_opcode_args.y] ? 0 : 1;
   _reg.V[_opcode_args.x] -= _reg.V[_opcode_args.y];
   _reg.pc += 2;
 }
@@ -411,7 +411,7 @@ inline void Chip8::inst_8XY6() {
  * sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't
  */
 inline void Chip8::inst_8XY7() {
-  _reg.V[0xF] = _reg.V[_opcode_args.x] > _reg.V[_opcode_args.y] ? 1 : 0;
+  _reg.V[0xF] = _reg.V[_opcode_args.x] > _reg.V[_opcode_args.y] ? 0 : 1;
   _reg.V[_opcode_args.x] = _reg.V[_opcode_args.y] - _reg.V[_opcode_args.x];
   _reg.pc += 2;
 }
@@ -493,7 +493,7 @@ inline void Chip8::inst_DXYN() {
  * skips the next instruction if the key stored in VX is pressed
  */ 
 inline void Chip8::inst_EX9E() {
-  if(_keypad[_reg.V[_opcode_args.x]] == static_cast<uint16_t>(Key_State::PRESSED))
+  if(_keypad[_reg.V[_opcode_args.x]] == static_cast<uint16_t>(Key_State::PRESSED)) 
     _reg.pc += 2;
   _reg.pc += 2;
 }
@@ -502,8 +502,8 @@ inline void Chip8::inst_EX9E() {
  * skips the next instruction if the key stored in VX isn't pressed
  */
 inline void Chip8::inst_EXA1() {
-  if(_keypad[_reg.V[_opcode_args.x]] == static_cast<uint16_t>(Key_State::RELEASED))
-    _reg.pc += 2;
+  if(_keypad[_reg.V[_opcode_args.x]] == static_cast<uint16_t>(Key_State::RELEASED)) 
+    _reg.pc += 2; 
   _reg.pc += 2;
 }
 
@@ -548,7 +548,7 @@ inline void Chip8::inst_FX18() {
  * adds VX to I
  */
 inline void Chip8::inst_FX1E() {
-  _reg.V[0xF] = (_reg.idx + _reg.V[_opcode_args.x]) > 0xFFFF ? 1 : 0;
+  _reg.V[0xF] = (_reg.idx + _reg.V[_opcode_args.x]) > 0x00FF ? 1 : 0;
   _reg.idx += _reg.V[_opcode_args.x];
   _reg.pc += 2;
 }
