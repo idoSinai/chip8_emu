@@ -20,7 +20,12 @@ class Graphics {
     const uint8_t _scale_factor;
 };
 
-
+/**
+ * drawing the window in white (while the background is black) 
+ * based on the values of matrix which represent the screen
+ * 
+ * @param screen matrix which represent the screen to be drawn
+ */
 template<uint8_t width, uint8_t height>
 void Graphics::draw_window(const std::array<std::array<uint8_t, width>, height>& screen) {
   window.clear(sf::Color::Black);

@@ -4,6 +4,12 @@
 #include <memory>
 #include "chip8.hpp"
 
+/**
+ * this program emulates a chip8 machine 
+ * 
+ * @param argv[1] rom's path
+ * @return 0 for successful run otherwise 1
+ */
 int main(int argc, char** argv) {
   if(argc != 2) {
     std::cerr << "[usage]: " << argv[0] << " <ROM file>" << std::endl; 

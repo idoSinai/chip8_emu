@@ -17,7 +17,6 @@ enum class Key_State : uint8_t {RELEASED = 0, PRESSED = 1};
 
 class Chip8 {
   public:
-    
     Chip8(const std::string& path);
     Chip8() = delete;
     ~Chip8() = default;
@@ -47,14 +46,15 @@ class Chip8 {
     } _timer;
 
     uint16_t _opcode; // saves the current opcode
-    struct {
-      uint16_t nnn;
-      uint8_t nn;
+    struct { /* struct for saving the symbols of an opcode*/
       uint8_t n;
+      uint8_t nn;
+      uint16_t nnn; 
       uint8_t x;
       uint8_t y;
     } _opcode_args;
 
+    /* opcode methods map for executing opcodes */
     typedef void (Chip8::*inst_func)();
     std::map<uint16_t, inst_func> _opcode_table; 
 
