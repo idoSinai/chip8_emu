@@ -11,6 +11,7 @@
 #include <thread>
 #include <iomanip>
 #include "chip8.hpp"
+#include "utility.hpp"
 
 constexpr uint16_t program_start_addr = 0x200;
 constexpr uint8_t fonts_size = 80,
@@ -86,10 +87,11 @@ void Chip8::handle_opcode() {
     }
   }
  
-  if(exec_opcode) 
-    std::cout << "executed: 0x" << std::hex << _opcode << " at address: 0x" << std::hex << curr_pc << std::endl;
+  if(exec_opcode)
+    std::cout << "executed: " << utility::get_hex(_opcode, 4) << " at address: "<< utility::get_hex(curr_pc, 4) << std::endl;
   else {
-    std::cerr << "didn't executed: 0x" << std::hex << _opcode << "  at address: 0x" << std::hex << curr_pc << std::endl;
+    std::cerr << "didn't executed: " << utility::get_hex(_opcode, 4) << " at address: "<< utility::get_hex(curr_pc, 4) << std::endl;
+    throw std::runtime_error("tried to execute illegal opcode");
   } 
 }
 
