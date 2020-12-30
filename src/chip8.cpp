@@ -11,7 +11,6 @@
 #include <thread>
 #include "chip8.hpp"
 
-
 constexpr uint16_t program_start_addr = 0x200;
 constexpr uint8_t fonts_size = 80,
                   scale_factor = 10;
@@ -440,9 +439,9 @@ inline void Chip8::inst_CXNN() {
 */
 inline void Chip8::inst_DXYN() { 
   // preventing dispay overflow
-  uint8_t coord_x = _reg.V[(0x0F00 & _opcode) >> 8] % 64,
-          coord_y = _reg.V[(0x00F0 & _opcode) >> 4] % 32,
-          sprite_height = 0x000F & _opcode;
+  uint8_t coord_x = _reg.V[_opcode_args.x] % display_width,
+          coord_y = _reg.V[_opcode_args.y] % display_height,
+          sprite_height = _opcode_args.n;
   // default state - no collision
   _reg.V[0xf] = 0;
   for (uint8_t row = 0; row < sprite_height; row++) {
