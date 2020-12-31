@@ -3,7 +3,6 @@
 #include <array>
 #include <cstring>
 #include <exception>
-#include <stdexcept>
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
